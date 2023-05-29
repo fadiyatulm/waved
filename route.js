@@ -1,8 +1,9 @@
 import express from "express";
 // import {auth} from "./auth/auth.js";
-import { getUsers, addUser, deleteUser, getUsersById, editUserById } from "./controller/user.js";
-import { getAllCategories, 
-    getCatbyId, addCat, editCatById, deleteCat, getAllStage, getStagebyId, getAllQuestion, getQuestbyId } from "./controller/quiz.js";
+import { getUsers, addUser, deleteUser, getUsersById, editUserById} from "./controller/user.js";
+import { addQuestion, getAllCategories, getCatbyId, addCat, editCatById, deleteCat, getAllStage, getStagebyId, getAllQuestion, getQuestbyId, getQuestbyCat, getQuestbyStage} from "./controller/quiz.js";
+import { getAllDictionary, getDictionarybyId, addDictionary, editWordById } from "./controller/dictionary.js";
+    
 
 const router = express.Router();
 
@@ -24,5 +25,14 @@ router.get('/stage/(:idStage)', getStagebyId);
 
 router.get('/question', getAllQuestion);
 router.get('/question/(:idQuest)', getQuestbyId);
+router.get('/question/categories/(:catId)', getQuestbyCat);
+router.get('/question/stage/(:idStage)', getQuestbyStage);
+router.post('/question', addQuestion);
+
+router.get('/dictionary', getAllDictionary);
+router.get('/dictionary/(:idDictionary)', getDictionarybyId);
+router.post('/dictionary', addDictionary);
+router.put('/dictionary/update/(:idDictionary)', editWordById);
+
 
 export default router;

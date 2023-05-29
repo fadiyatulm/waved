@@ -26,22 +26,6 @@ export const addCat = function(req, res){
     }) 
 }
 
-export const getAllQuestion = function(req, res){
-    con.query("SELECT * FROM question", function(err, data){
-        if(err){
-            res.status(500).json({
-                status: "fail"
-            })
-        }else{
-            res.status(200).json({
-                status: "success",
-                length: data?.length,
-                data: data
-            })
-        }
-    })
-}
-
 export const getAllCategories = function(req, res){
     con.query("SELECT * FROM cat", function(err, data){
         if(err){
@@ -58,8 +42,122 @@ export const getAllCategories = function(req, res){
     })
 }
 
+export const getCatbyId = function(req, res){
+    con.query("SELECT * FROM cat WHERE catId = " + req.params.catId , function(err, data){
+        if(err){
+            res.status(500).json({
+                status: "fail"
+            })
+        }else{
+            if (data.length == 0){
+                res.status(404).json({
+                    status: "fail",
+                    message: "Kategori tidak tersedia"
+                })
+            }else{
+                res.status(200).json({
+                    status: "success",
+                    data: data
+                })
+            }
+        }    
+    })
+}
+
+export const editCatById = function(req, res){
+    const name = req.body.name;
+    const catId = req.params.catId;
+
+    con.query(`SELECT * FROM cat WHERE catId = ${catId}`, function(err, data){
+        if (data.length == 0){
+            res.status(404).json({
+                status: "fail",
+                message: "Kategori tidak ditemukan"
+            })
+        }
+        else{
+            con.query(`UPDATE cat SET name = '${name}' WHERE catId = ${catId}` , function(err, data){
+                if(err){
+                    res.status(500).json({
+                        status: "fail"
+                    })
+                }else{
+                    res.status(200).json({
+                        status: "success",
+                        message: "berhasil diperbarui"
+                    }) 
+                }
+            })
+        }
+    })
+}
+
+export const deleteCat = function(req, res){
+    const catId = req.params.catId;
+
+    con.query(`SELECT * FROM cat WHERE catId = ${catId}`, function(err, data, next){
+        if (data.length == 0){
+            res.status(404).json({
+                status: "fail",
+                message: "Kategori tidak ditemukan"
+            })
+        }else{
+            con.query(`DELETE FROM cat WHERE catId = ${catId}` , function(err, data, field){
+                if(err){
+                    res.status(500).json({
+                        status: "fail"
+                    })
+                }else{
+                    res.status(200).json({
+                        status: "success",
+                        message: "berhasil dihapus"
+                    })
+                }
+            })
+        }
+    })
+}
+
 export const getAllStage = function(req, res){
     con.query("SELECT * FROM stage", function(err, data){
+        if(err){
+            res.status(500).json({
+                status: "fail"
+            })
+        }else{
+            res.status(200).json({
+                status: "success",
+                length: data?.length,
+                data: data
+            })
+        }
+    })
+}
+
+export const getStagebyId = function(req, res){
+    con.query("SELECT * FROM stage WHERE idStage = " + req.params.idStage , function(err, data){
+        if(err){
+            res.status(500).json({
+                status: "fail"
+            })
+        }else{
+            if (data.length == 0){
+                res.status(404).json({
+                    status: "fail",
+                    message: "Stage tidak tersedia"
+                })
+            }else{
+                res.status(200).json({
+                    status: "success",
+                    data: data
+                })
+            }
+        }    
+    })
+}
+
+export const getAllQuestion = function(req, res){
+    con.query("SELECT * FROM question", function(err, data){
         if(err){
             res.status(500).json({
                 status: "fail"
@@ -96,8 +194,8 @@ export const getQuestbyId = function(req, res, next){
     })
 }
 
-export const getCatbyId = function(req, res){
-    con.query("SELECT * FROM cat WHERE catId = " + req.params.catId , function(err, data){
+export const getQuestbyCat = function(req, res){
+    con.query("SELECT * FROM question WHERE catId = " + req.params.catId , function(err, data){
         if(err){
             res.status(500).json({
                 status: "fail"
@@ -106,7 +204,7 @@ export const getCatbyId = function(req, res){
             if (data.length == 0){
                 res.status(404).json({
                     status: "fail",
-                    message: "Kategori tidak tersedia"
+                    message: "Tidak ada soal di kategori ini"
                 })
             }else{
                 res.status(200).json({
@@ -118,8 +216,8 @@ export const getCatbyId = function(req, res){
     })
 }
 
-export const getStagebyId = function(req, res){
-    con.query("SELECT * FROM stage WHERE idStage = " + req.params.idStage , function(err, data){
+export const getQuestbyStage = function(req, res){
+    con.query("SELECT * FROM question WHERE idStage = " + req.params.idStage , function(err, data){
         if(err){
             res.status(500).json({
                 status: "fail"
@@ -128,7 +226,7 @@ export const getStagebyId = function(req, res){
             if (data.length == 0){
                 res.status(404).json({
                     status: "fail",
-                    message: "Stage tidak tersedia"
+                    message: "Tidak ada soal di level ini"
                 })
             }else{
                 res.status(200).json({
@@ -140,65 +238,30 @@ export const getStagebyId = function(req, res){
     })
 }
 
-export const editCatById = function(req, res){
-    const name = req.body.name;
-    const catId = req.params.catId;
+// get random question
 
-    con.query(`SELECT * FROM cat WHERE catId = ${catId}`, function(err, data){
-        if (data.length == 0){
-            res.status(404).json({
-                status: "fail",
-                message: "Kategori tidak ditemukan"
-            })
-        }
-        else{
-            con.query(`SELECT name FROM cat WHERE name = '${name}'`, function(err, data){
-                if(data?.length > 0){
-                    res.status(400).json({
-                        status: "fail",
-                        message: "Kategori sudah tersedia"
-                    })
-                }else{
-                    con.query(`UPDATE cat SET name = '${name}' WHERE catId = ${catId}` , function(err, data){
-                        if(err){
-                            res.status(500).json({
-                                status: "fail"
-                            })
-                        }else{
-                            res.status(200).json({
-                                status: "success",
-                                message: "berhasil diperbarui"
-                            }) 
-                        }
-                    })
-                }
-            })
-        }
-    })    
-}
+// add question
+export const addQuestion = function(req, res){
+    const question = req.body.question;
+    const catId = req.body.catId;
+    const idStage = req.body.idStage;
 
-export const deleteCat = function(req, res){
-    const catId = req.params.catId;
-
-    con.query(`SELECT * FROM cat WHERE catId = ${catId}`, function(err, data, next){
-        if (data.length == 0){
-            res.status(404).json({
-                status: "fail",
-                message: "Kategori tidak ditemukan"
+    con.query("INSERT INTO question SET?", {question: question, catId: catId, idStage: idStage} , function(err, data){
+        if(err){
+            res.status(500).json({
+            status: "fail"
             })
         }else{
-            con.query(`DELETE FROM cat WHERE catId = ${catId}` , function(err, data, field){
-                if(err){
-                    res.status(500).json({
-                        status: "fail"
-                    })
-                }else{
-                    res.status(200).json({
-                        status: "success",
-                        message: "berhasil dihapus"
-                    })
-                }
-            })
+            res.status(201).json({
+                status: "success",
+                message: "Pertanyaan berhasil"
+            })    
         }
     })
 }
+
+// delete question
+
+// update question
+
+// edit question
