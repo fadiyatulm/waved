@@ -1,38 +1,34 @@
 import express from "express";
-// import {auth} from "./auth/auth.js";
-import { getUsers, addUser, deleteUser, getUsersById, editUserById} from "./controller/user.js";
-import { addQuestion, getAllCategories, getCatbyId, addCat, editCatById, deleteCat, getAllStage, getStagebyId, getAllQuestion, getQuestbyId, getQuestbyCat, getQuestbyStage} from "./controller/quiz.js";
-import { getAllDictionary, getDictionarybyId, addDictionary, editWordById } from "./controller/dictionary.js";
+import { verifyToken } from "./verifytoken.js";
+import { addUser, Login } from "./controller/auth.js";
+import { getUsers, deleteUser, getUsersById, editUserById} from "./controller/user.js";
+import { addQuestion, getAllQuestion, getQuestbyId, getRandomQuestion } from "./controller/quiz.js";
+import { getAllWord, getWordbyId, addWord } from "./controller/dictionary.js";
     
 
 const router = express.Router();
 
-router.get('/users', getUsers);
-router.get('/users/(:id)', getUsersById);
+router.get('/', function(req, res) {
+    res.status(200).json({
+        status: "success",
+        message: "REST API berjalan"
+    })
+})
+router.get('/users', verifyToken, getUsers);
+router.get('/users/(:id)', verifyToken, getUsersById);
 router.post('/register', addUser);
-// router.post('/login', login);
-router.put('/users/edit/(:id)', editUserById);
-router.delete('/users/delete/(:id)', deleteUser);
+router.post('/login', Login);
+router.put('/users/(:id)/update', verifyToken, editUserById);
+router.delete('/users/(:id)/delete', verifyToken, deleteUser);
 
-router.get('/categories', getAllCategories);
-router.get('/categories/(:catId)', getCatbyId);
-router.post('/categories', addCat);
-router.put('/categories/update/(:catId)', editCatById);
-router.delete('/categories/delete/(:catId)', deleteCat);
+router.get('/question', verifyToken, getAllQuestion);
+router.get('/question/(:idQuest)', verifyToken, getQuestbyId);
+router.get('/question/random', verifyToken, getRandomQuestion);
+router.post('/question', verifyToken, addQuestion);
 
-router.get('/stage', getAllStage);
-router.get('/stage/(:idStage)', getStagebyId);
-
-router.get('/question', getAllQuestion);
-router.get('/question/(:idQuest)', getQuestbyId);
-router.get('/question/categories/(:catId)', getQuestbyCat);
-router.get('/question/stage/(:idStage)', getQuestbyStage);
-router.post('/question', addQuestion);
-
-router.get('/dictionary', getAllDictionary);
-router.get('/dictionary/(:idDictionary)', getDictionarybyId);
-router.post('/dictionary', addDictionary);
-router.put('/dictionary/update/(:idDictionary)', editWordById);
+router.get('/dictionary', verifyToken, getAllWord);
+router.get('/dictionary/(:idDictionary)', verifyToken, getWordbyId);
+router.post('/dictionary', verifyToken, addWord);
 
 
 export default router;
