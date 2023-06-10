@@ -19,7 +19,7 @@ export const addUser = async(req, res) => {
     }
     const hashPassword = await bcrypt.hash(password, 10);
     try {
-        con.query(`SELECT email FROM user WHERE email = '${email}'`, function(err, data, field){
+        con.query(`SELECT email FROM user WHERE email = ?`, email, function(err, data, field){
             if(data?.length > 0){
                 return res.status(400).json({
                     status: "fail",
@@ -48,7 +48,7 @@ export const addUser = async(req, res) => {
 export const Login = async(req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    con.query(`SELECT * FROM user WHERE email = '${email}'`, async function(error, data) {
+    con.query(`SELECT * FROM user WHERE email = ?`, email, async function(error, data) {
         if (data.length > 0) {
             const comparePwd = await bcrypt.compare(password, data[0].password);
             if(!comparePwd){

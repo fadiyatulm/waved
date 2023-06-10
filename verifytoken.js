@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 export const  verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (token == null){
-        return res.status(401).json({
+        return res.status(403).json({
             status: "fail",
             message: "Tidak ada token"
         })

@@ -17,7 +17,7 @@ export const getUsers = function(req, res) {
             })
         }
     })
-};
+}
 
 //getuser by id
 export const getUsersById = function(req, res){
@@ -105,6 +105,6 @@ export const deleteUser = function(req, res){
                     })
                 }
             })
-        };
+        }
     })
-};
+}
