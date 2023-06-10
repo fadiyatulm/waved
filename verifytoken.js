@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const  verifyToken = (req, res, next) => {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['authorization'];
     if (token == null){
         return res.status(401).json({
             status: "fail",

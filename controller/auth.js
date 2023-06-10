@@ -14,7 +14,7 @@ export const addUser = async(req, res) => {
     if(password !== confPassword){
         return res.status(400).json({
             status: "fail",
-            message: "Password dan confirm Password tidak cocok"
+            message: "Password and Confirm Password don't match!"
         })
     }
     const hashPassword = await bcrypt.hash(password, 10);
@@ -23,7 +23,7 @@ export const addUser = async(req, res) => {
             if(data?.length > 0){
                 return res.status(400).json({
                     status: "fail",
-                    message: "Email sudah terdaftar."
+                    message: "Email has been registered!"
                 })
             }
 
@@ -33,7 +33,7 @@ export const addUser = async(req, res) => {
                 con.query("INSERT INTO user SET?", {email: email, name: name, password: hashPassword, createdAt: createdAt, updatedAt: updatedAt} , function(err, data){
                     return res.status(201).json({
                         status: "success",
-                        message: "akun berhasil dibuat"
+                        message: "Account created!"
                     })    
                 })
             }
@@ -47,24 +47,28 @@ export const addUser = async(req, res) => {
 
 export const Login = async(req, res) => {
     const email = req.body.email;
+    const password = req.body.password;
     con.query(`SELECT * FROM user WHERE email = '${email}'`, async function(error, data) {
         if (data.length > 0) {
-            const match = await bcrypt.compare(req.body.password, data[0].password);
-            if(!match){
+            const comparePwd = await bcrypt.compare(password, data[0].password);
+            if(!comparePwd){
                 return res.status(400).json({
-                    message:"Password salah"
-                });
+                    message:"Wrong Password!"
+                })
             }
-            const accessToken = jwt.sign({ id_user: data[0].id, email: data[0].email },
-                process.env.ACCESS_TOKEN_SECRET, {
-                    expiresIn: '30d'
-                }
-            );
-            res.json({ accessToken });
+            const accessToken = jwt.sign({userId: data[0].id, email: data[0].email},
+                process.env.ACCESS_TOKEN, {
+                    expiresIn: '20d'
+            })
+            
+            res.status(200).json({ 
+                message: "Login success",
+                accessToken });
+
         }else if (data.length == 0){
             res.status(400).json({
                 status: "fail",
-                message: "Email belum terdaftar."
+                message: "Email hasn't been registered!"
             })
         }
     })

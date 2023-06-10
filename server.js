@@ -2,6 +2,9 @@ import express from "express";
 import con from "./connection.js";
 import router from "./route.js";
 import bodyParser from "body-parser";
+import * as dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
+dotenv.config();
 
 const app = express();
 	
@@ -14,6 +17,7 @@ con.connect(function(err) {
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.json());
 app.use(router);
 
