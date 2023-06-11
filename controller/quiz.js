@@ -14,22 +14,6 @@ export const getRandomQuestion = function(req, res){
     })
 }
 
-export const addScore = function (req, res) {
-    const highscore = req.body.highscore;
-    const email = req.body.email;
-
-    con.query(`UPDATE user SET highscore = '${highscore}' WHERE email = '${email}'`, function(err, data){
-        if(err){
-            res.status(500).json({ status: "fail" })
-        }else{
-            res.status(200).json({ 
-                status: "success", 
-                message: "berhasil diperbarui", 
-            }) 
-        }
-    })
-}
-
 export const getAllQuestion = function(req, res){
     con.query(`SELECT * FROM question`, function(err, data){
         if(err){
@@ -71,8 +55,9 @@ export const getQuestbyId = function(req, res, next){
 // add question
 export const addQuestion = function(req, res){
     const question = req.body.question;
+    const answer = req.body.answer;
 
-    con.query("INSERT INTO question SET?", {question: question} , function(err, data){
+    con.query("INSERT INTO question SET?", {question: question, answer: answer} , function(err, data){
         if(err){
             res.status(500).json({
             status: "fail"
@@ -90,6 +75,7 @@ export const addQuestion = function(req, res){
 export const editQuestById = function(req, res){
     const question = req.body.question;
     const idQuest = req.params.idQuest;
+    const answer = req.body.answer;
 
     con.query(`SELECT * FROM question WHERE idQuest = '${idQuest}'`, function(err, data){
         if (data.length == 0){
@@ -99,7 +85,7 @@ export const editQuestById = function(req, res){
             })
         }
         else{
-            con.query(`UPDATE question SET question = '${question}' WHERE idQuest = ${idQuest}` , function(err, data){
+            con.query(`UPDATE question SET question = '${question}', answer = '${answer}' WHERE idQuest = ${idQuest}` , function(err, data){
                 if(err){
                     res.status(500).json({ status: "fail" })
                 }else{

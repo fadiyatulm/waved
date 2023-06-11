@@ -2,7 +2,7 @@ import express from "express";
 import { verifyToken } from "./verifytoken.js";
 import { addUser, Login } from "./controller/auth.js";
 import { getUsers, deleteUser, getUsersById, editUserById} from "./controller/user.js";
-import { addQuestion, addScore, deleteQuestion, editQuestById, getAllQuestion, getQuestbyId, getRandomQuestion } from "./controller/quiz.js";
+import { addQuestion, deleteQuestion, editQuestById, getAllQuestion, getQuestbyId, getRandomQuestion } from "./controller/quiz.js";
 import { getAllWord, getWordbyId, addWord, editWordById, deleteWord } from "./controller/dictionary.js";
     
 
@@ -19,7 +19,6 @@ router.post('/register', addUser);
 router.post('/login', Login);
 router.get('/users', verifyToken, getUsers);
 router.get('/users/(:id)', verifyToken, getUsersById);
-router.put('/update/score', verifyToken, addScore);
 router.put('/users/(:id)/update', verifyToken, editUserById);
 router.delete('/users/(:id)/delete', verifyToken, deleteUser);
 
