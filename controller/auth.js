@@ -27,10 +27,18 @@ export const addUser = async(req, res) => {
                 })
             }
 
-            const createdAt = new Date().toISOString();
+            const createdAt = new Date().toISOString().split('T')[0];;
             const updatedAt = createdAt;
             if(data?.length == 0){
-                con.query("INSERT INTO user SET?", {email: email, name: name, password: hashPassword, createdAt: createdAt, updatedAt: updatedAt} , function(err, data){
+                var values = [email, name, hashPassword, createdAt, updatedAt];
+                con.query("INSERT INTO user (email, name, password, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)", values , function(err, data){
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).json({
+                            status: "fail",
+                            message: "error while querying db " + err
+                        })
+                    }
                     return res.status(201).json({
                         status: "success",
                         message: "Account created!"
@@ -48,7 +56,7 @@ export const addUser = async(req, res) => {
 export const Login = async(req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    con.query(`SELECT * FROM user WHERE email = ?`, email, async function(error, data) {
+    con.query(`SELECT * FROM user WHERE email = '${email}'`, async function(error, data) {
         if (data.length > 0) {
             const comparePwd = await bcrypt.compare(password, data[0].password);
             if(!comparePwd){

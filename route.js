@@ -27,9 +27,9 @@ router.get('/question/(:idQuest)', verifyToken, getQuestbyId);
 router.post('/question', verifyToken, addQuestion);
 router.put('/question/(:idQuest)/update', verifyToken, editQuestById);
 router.delete('/question/(:idQuest)/delete', verifyToken, deleteQuestion);
+router.get('/questions/random', verifyToken, getRandomQuestion);
 
 router.get('/dictionary', verifyToken, getAllWord);
-router.get('/questions/random', verifyToken, getRandomQuestion);
 router.get('/dictionary/(:idDictionary)', verifyToken, getWordbyId);
 router.post('/dictionary', verifyToken, addWord);
 router.put('/dictionary/(:idDictionary)/update', verifyToken, editWordById)

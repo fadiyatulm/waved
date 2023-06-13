@@ -47,7 +47,7 @@ export const editUserById = function(req, res){
     const email = req.body.email;
     const name = req.body.name;
     const id = req.params.id;
-    const updatedAt = new Date().toISOString();
+    const updatedAt = new Date().toISOString().split('T')[0];
 
     con.query(`SELECT * FROM user WHERE id = ${id}`, function(err, data, next){
         if (data.length == 0){
