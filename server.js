@@ -2,6 +2,7 @@ import express from "express";
 import con from "./connection.js";
 import router from "./route.js";
 import bodyParser from "body-parser";
+import cors from "cors";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
