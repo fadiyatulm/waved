@@ -17,23 +17,23 @@ router.get('/', function(req, res) {
 
 router.post('/register', addUser);
 router.post('/login', Login);
-router.get('/users', verifyToken, getUsers);
-router.get('/users/(:id)', verifyToken, getUsersById);
-router.put('/users/(:id)/update', verifyToken, editUserById);
-router.delete('/users/(:id)/delete', verifyToken, deleteUser);
+router.get('/users', getUsers);
+router.get('/users/(:id)', getUsersById);
+router.put('/users/(:id)/update', editUserById);
+router.delete('/users/(:id)/delete', deleteUser);
 
-router.get('/question', verifyToken, getAllQuestion);
-router.get('/question/(:idQuest)', verifyToken, getQuestbyId);
-router.post('/question', verifyToken, addQuestion);
-router.put('/question/(:idQuest)/update', verifyToken, editQuestById);
-router.delete('/question/(:idQuest)/delete', verifyToken, deleteQuestion);
-router.get('/questions/random', verifyToken, getRandomQuestion);
+router.get('/question', getAllQuestion);
+router.get('/question/(:idQuest)', getQuestbyId);
+router.post('/question', addQuestion);
+router.put('/question/(:idQuest)/update', editQuestById);
+router.delete('/question/(:idQuest)/delete', deleteQuestion);
+router.get('/questions/random', getRandomQuestion);
 
-router.get('/dictionary', verifyToken, getAllWord);
-router.get('/dictionary/(:idDictionary)', verifyToken, getWordbyId);
-router.post('/dictionary', verifyToken, addWord);
-router.put('/dictionary/(:idDictionary)/update', verifyToken, editWordById)
-router.delete('/dictionary/(:idDictionary)/delete', verifyToken, deleteWord)
+router.get('/dictionary', getAllWord);
+router.get('/dictionary/(:idDictionary)', getWordbyId);
+router.post('/dictionary', addWord);
+router.put('/dictionary/(:idDictionary)/update', editWordById)
+router.delete('/dictionary/(:idDictionary)/delete', deleteWord)
 
 
 export default router;
